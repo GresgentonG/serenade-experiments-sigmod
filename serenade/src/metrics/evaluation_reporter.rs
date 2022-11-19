@@ -6,6 +6,7 @@ use crate::metrics::mrr::Mrr;
 use crate::metrics::ndcg::Ndcg;
 use crate::metrics::popularity::Popularity;
 use crate::metrics::precision::Precision;
+use crate::metrics::original_precision::OPrecision;
 use crate::metrics::recall::Recall;
 use crate::metrics::SessionMetric;
 
@@ -15,6 +16,7 @@ pub struct EvaluationReporter {
     hitrate: HitRate,
     popularity: Popularity,
     precision: Precision,
+    oprecision: OPrecision,
     coverage: Coverage,
     recall: Recall,
     f1: F1score,
@@ -34,6 +36,7 @@ impl EvaluationReporter {
         let hitrate = HitRate::new(length);
         let popularity = Popularity::new(training_df, length);
         let precision = Precision::new(length);
+        let oprecision = OPrecision::new(length);
         let coverage = Coverage::new(training_df, length);
         let recall = Recall::new(length);
         let f1 = F1score::new(length);
@@ -44,6 +47,7 @@ impl EvaluationReporter {
             hitrate,
             popularity,
             precision,
+            oprecision,
             coverage,
             recall,
             f1,
@@ -58,6 +62,7 @@ impl EvaluationReporter {
         self.hitrate.add(recommendations, next_items);
         self.popularity.add(recommendations, next_items);
         self.precision.add(recommendations, next_items);
+        self.oprecision.add(recommendations, next_items);
         self.coverage.add(recommendations, next_items);
         self.recall.add(recommendations, next_items);
         self.f1.add(recommendations, next_items);
@@ -69,16 +74,18 @@ impl EvaluationReporter {
         let hitrate_score = format!("{:.4}", self.hitrate.result());
         let popularity_score = format!("{:.4}", self.popularity.result());
         let precision_score = format!("{:.4}", self.precision.result());
+        let oprecision_score = format!("{:.4}", self.oprecision.result());
         let coverage_score = format!("{:.4}", self.coverage.result());
         let recall_score = format!("{:.4}", self.recall.result());
         let f1_score = format!("{:.4}", self.f1.result());
         format!(
-            "{},{},{},{},{},{},{},{}",
+            "{},{},{},{},{},{},{},{},{}",
             mrr_score,
             ndcg_score,
             hitrate_score,
             popularity_score,
             precision_score,
+            oprecision_score,
             coverage_score,
             recall_score,
             f1_score
@@ -91,16 +98,18 @@ impl EvaluationReporter {
         let hitrate_name = self.hitrate.get_name();
         let popularity_name = self.popularity.get_name();
         let precision_name = self.precision.get_name();
+        let oprecision_name = self.oprecision.get_name();
         let coverage_name = self.coverage.get_name();
         let recall_name = self.recall.get_name();
         let f1_name = self.f1.get_name();
         format!(
-            "{},{},{},{},{},{},{},{}",
+            "{},{},{},{},{},{},{},{},{}",
             mrr_name,
             ndcg_name,
             hitrate_name,
             popularity_name,
             precision_name,
+            oprecision_name,
             coverage_name,
             recall_name,
             f1_name
