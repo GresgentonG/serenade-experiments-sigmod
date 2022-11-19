@@ -81,7 +81,7 @@ pub fn determine_training_data_statistics(
         .unwrap();
 
     // │     Session duration percentiles (secs):  p5=14 p25=77 p50=248 p75=681 p90=1316 p95=1862 p99=3359 p99.5=4087 p100=539931
-    println!("Using hardcoded session duration percentiles.");
+    // println!("Using hardcoded session duration percentiles.");
     let session_duration_p05 = 14_u64;
     let session_duration_p25 = 77_u64;
     let session_duration_p50 = 248_u64;

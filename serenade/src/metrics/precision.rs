@@ -30,17 +30,22 @@ impl Precision {
 
 impl SessionMetric for Precision {
     fn add(&mut self, recommendations: &[u64], next_items: &[u64]) {
-        self.qty += 1;
         let top_recos: HashSet<&u64> = recommendations
             .iter()
             .take(cmp::min(recommendations.len(), self.length))
             .collect();
 
-        let next_items: HashSet<&u64> = next_items.iter().collect();
-
-        let intersection = top_recos.intersection(&next_items);
-
-        self.sum_of_scores += intersection.count() as f64 / self.length as f64
+        // let next_items: HashSet<&u64> = next_items.iter().collect();
+        
+        // let intersection = top_recos.intersection(&next_items);
+        
+        // self.sum_of_scores += intersection.count() as f64 / self.length as f64
+        
+        // let next_item = next_items[0]
+        if (next_items.len() > 0 && recommendations.len() > 0) {
+            self.qty += 1;
+            if (next_items[0] == recommendations[0]) { self.sum_of_scores += 1.0 }
+        }
     }
 
     fn result(&self) -> f64 {

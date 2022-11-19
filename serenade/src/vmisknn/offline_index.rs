@@ -37,10 +37,10 @@ pub struct OfflineIndex {
 impl OfflineIndex {
     pub fn new_from_csv(path_to_training: &str, m_most_recent_sessions: usize) -> Self {
         let start_time = Instant::now();
-        println!(
-            "reading training data, determine items per training session {}",
-            &path_to_training
-        );
+        // println!(
+        //     "reading training data, determine items per training session {}",
+        //     &path_to_training
+        // );
         let data_train = read_from_file(path_to_training);
         let (
             historical_sessions_train,
@@ -48,13 +48,13 @@ impl OfflineIndex {
             historical_sessions_max_time_stamp,
             training_data_stats,
         ) = data_train.unwrap();
-        println!(
-            "reading training data, determine items per training session:{} micros",
-            start_time.elapsed().as_micros()
-        );
+        // println!(
+        //     "reading training data, determine items per training session:{} micros",
+        //     start_time.elapsed().as_micros()
+        // );
 
         let start_time = Instant::now();
-        println!("prepare indexes");
+        // println!("prepare indexes");
         let (
             item_to_top_sessions_ordered,
             item_to_idf_score,
@@ -66,10 +66,10 @@ impl OfflineIndex {
             m_most_recent_sessions,
             training_data_stats.qty_events_p99_5 as usize,
         );
-        println!(
-            "prepare indexes:{} micros",
-            start_time.elapsed().as_micros()
-        );
+        // println!(
+        //     "prepare indexes:{} micros",
+        //     start_time.elapsed().as_micros()
+        // );
 
         OfflineIndex {
             item_to_top_sessions_ordered,
@@ -101,7 +101,7 @@ impl OfflineIndex {
             start_time.elapsed().as_secs()
         );
 
-        println!("Using hardcoded session duration percentiles.");
+        // println!("Using hardcoded session duration percentiles.");
         let session_duration_p05 = 14_u64;
         let session_duration_p25 = 77_u64;
         let session_duration_p50 = 248_u64;
@@ -690,7 +690,7 @@ pub fn read_from_file(
     let qty_events_digest = TDigest::new_with_size(100);
     let qty_events_digest = qty_events_digest.merge_unsorted(qty_events);
 
-    println!("Using hardcoded session duration percentiles.");
+    // println!("Using hardcoded session duration percentiles.");
     let session_duration_p05 = 14_u64;
     let session_duration_p25 = 77_u64;
     let session_duration_p50 = 248_u64;
@@ -739,7 +739,7 @@ pub fn read_from_file(
         qty_events_p100,
     };
 
-    println!("qty_events_p99_5: {}", qty_events_p99_5);
+    // println!("qty_events_p99_5: {}", qty_events_p99_5);
     Ok((
         historical_sessions,
         historical_sessions_id,
