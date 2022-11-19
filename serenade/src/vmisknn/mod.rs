@@ -14,6 +14,7 @@ pub mod similarity_hashed;
 pub mod similarity_indexed;
 pub mod offline_index;
 pub mod tree_index;
+pub mod vmisknn_simplified_index;
 
 #[derive(PartialEq, Debug)]
 pub struct SessionScore {
@@ -181,7 +182,7 @@ pub fn predict<I: SimilarityComputationNew + Send + Sync>(
 
     // Return the proper amount of recommendations and filter them using business rules.
     let mut top_items: BinaryHeap<ItemScore> = BinaryHeap::with_capacity(how_many);
-    let current_item_attribs: Option<&ProductAttributes> = index.find_attributes(&most_recent_item);
+    let current_item_attribs: Option<&ProductAttributes> = if enable_business_logic { index.find_attributes(&most_recent_item) } else { None };
     for (reco_item_id, reco_item_score) in item_scores.into_iter() {
         let scored_item = ItemScore::new(reco_item_id, reco_item_score);
 

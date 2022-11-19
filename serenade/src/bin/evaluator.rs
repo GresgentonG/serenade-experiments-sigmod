@@ -2,6 +2,7 @@ use serenade_optimized::{io, vmisknn};
 // use serenade_optimized::metrics::mrr::Mrr;
 // use serenade_optimized::metrics::SessionMetric;
 use serenade_optimized::vmisknn::offline_index::OfflineIndex;
+use serenade_optimized::vmisknn::vmisknn_simplified_index::VMISSkNNSimpleIndex;
 use serenade_optimized::metrics::evaluation_reporter::EvaluationReporter;
 
 fn main() {
@@ -27,7 +28,7 @@ fn main() {
     let enable_business_logic = false;
 
     let training_df = io::read_training_data(&*path_to_training);
-    let offline_index = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
+    let offline_index = VMISSkNNSimpleIndex::new(&*path_to_training, n_most_recent_sessions);
 
     let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
 
