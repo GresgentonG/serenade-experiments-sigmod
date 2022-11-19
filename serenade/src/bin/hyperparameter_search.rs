@@ -36,15 +36,15 @@ fn main() {
     let main_metric_name = Mrr::new(20).get_name();
 
     let chosen_hyperparameters = hyper_parametergrid.get_n_random_combinations(150);
+    let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
     for hyperparams in chosen_hyperparameters {
         let max_items_in_session = *hyperparams.get("max_items_in_session").unwrap();
         let neighborhood_size_k = *hyperparams.get("neighborhood_size_k").unwrap();
         let m_most_recent_sessions = *hyperparams.get("m_most_recent_sessions").unwrap();
         let enable_business_logic = false;
-
+        
+        let vsknn_index = OfflineIndex::new_from_csv(&*path_to_training, m_most_recent_sessions);
         if neighborhood_size_k <= m_most_recent_sessions {
-            let vsknn_index = OfflineIndex::new_from_csv(&*path_to_training, m_most_recent_sessions);
-            let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
             let mut mymetric = Mrr::new(20);
             ordered_test_sessions
                 .iter()
@@ -90,7 +90,7 @@ fn main() {
         }
     }
     println!(
-        "Best hyperparameter values found:,{:?} with {}:{}",
-        best_params, main_metric_name, best_score
+        "\nBest hyperparameter values found:\nm_most_recent_sessions: {}\nneighborhood_size_k: {}\nmax_items_in_session: {}\n with {}:{}",
+        *best_params.get("m_most_recent_sessions").unwrap(), *best_params.get("neighborhood_size_k").unwrap(), *best_params.get("max_items_in_session").unwrap(), main_metric_name, best_score
     );
 }

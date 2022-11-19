@@ -21,7 +21,7 @@ fn main() {
         .nth(2)
         .expect("Test data file not specified!");
     println!("test_data_file:{}", test_data_file);
-    let n_most_recent_sessions = std::env::args().nth(3).expect("hyperparam: `n_most_recent_sessions` not specified!").parse::<usize>().unwrap();
+    let n_most_recent_sessions = std::env::args().nth(3).expect("hyperparam: `m_most_recent_sessions` not specified!").parse::<usize>().unwrap();
     let neighborhood_size_k = std::env::args().nth(4).expect("hyperparam: `neighborhood_size_k` not specified!").parse::<usize>().unwrap();
     let last_items_in_session = std::env::args().nth(5).expect("hyperparam: `last_items_in_session` not specified!").parse::<usize>().unwrap();
     let enable_business_logic = false;
@@ -31,7 +31,7 @@ fn main() {
 
     let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
 
-    let qty_max_reco_results = 24;
+    let qty_max_reco_results = 20;
     let mut mymetric = EvaluationReporter::new(&training_df, qty_max_reco_results);
 
     ordered_test_sessions
@@ -61,9 +61,19 @@ fn main() {
                     .collect::<Vec<u64>>();
 
                 let actual_next_items = Vec::from(&evolving_session_items[session_state..]);
+                // println!("recommended: {:?}\nactual: {:?}\n---------", &recommended_items, &actual_next_items);
                 mymetric.add(&recommended_items, &actual_next_items);
             }
         });
 
-    println!("{}: {}", mymetric.get_name(), mymetric.result());
+    println!(
+        "{}",
+        mymetric
+            .get_name()
+            .split(",")
+            .zip(mymetric.result().split(","))
+            .map(|(n, score)| format!("{}: {}", n, score))
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
 }
