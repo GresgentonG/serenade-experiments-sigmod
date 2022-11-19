@@ -2,7 +2,9 @@ use serenade_optimized::{io, vmisknn};
 // use serenade_optimized::metrics::mrr::Mrr;
 // use serenade_optimized::metrics::SessionMetric;
 use serenade_optimized::vmisknn::offline_index::OfflineIndex;
+use serenade_optimized::vmisknn::vsknn_index::VSkNNIndex;
 use serenade_optimized::vmisknn::vmisknn_simplified_index::VMISSkNNSimpleIndex;
+
 use serenade_optimized::metrics::evaluation_reporter::EvaluationReporter;
 
 fn main() {
@@ -28,12 +30,17 @@ fn main() {
     let enable_business_logic = false;
 
     let training_df = io::read_training_data(&*path_to_training);
-    let offline_index = VMISSkNNSimpleIndex::new(&*path_to_training, n_most_recent_sessions);
+    
+    let offline_index_modified = VMISSkNNSimpleIndex::new(&*path_to_training, n_most_recent_sessions);
+    let offline_index_vmis = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
+    let offline_index_vs = VSkNNIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
 
     let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
 
     let qty_max_reco_results = 20;
-    let mut mymetric = EvaluationReporter::new(&training_df, qty_max_reco_results);
+    let mut mymetric_modified = EvaluationReporter::new(&training_df, qty_max_reco_results);
+    let mut mymetric_vmis = EvaluationReporter::new(&training_df, qty_max_reco_results);
+    let mut mymetric_vs = EvaluationReporter::new(&training_df, qty_max_reco_results);
 
     ordered_test_sessions
         .iter()
@@ -46,16 +53,46 @@ fn main() {
                     0
                 };
                 let session: &[u64] = &evolving_session_items[start_index..session_state];
-                let recommendations = vmisknn::predict(
-                    &offline_index,
+                
+                let recommendations_modified = vmisknn::predict(
+                    &offline_index_modified,
                     &session,
                     neighborhood_size_k,
                     n_most_recent_sessions,
                     qty_max_reco_results,
                     enable_business_logic,
                 );
+                let recommended_items_modified = recommendations_modified
+                    .into_sorted_vec()
+                    .iter()
+                    .map(|scored| scored.id)
+                    .collect::<Vec<u64>>();
 
-                let recommended_items = recommendations
+                
+                let recommendations_vmis = vmisknn::predict(
+                    &offline_index_vmis,
+                    &session,
+                    neighborhood_size_k,
+                    n_most_recent_sessions,
+                    qty_max_reco_results,
+                    enable_business_logic,
+                );
+                let recommended_items_vmis = recommendations_vmis
+                    .into_sorted_vec()
+                    .iter()
+                    .map(|scored| scored.id)
+                    .collect::<Vec<u64>>();
+
+                
+                let recommendations_vs = vmisknn::predict(
+                    &offline_index_vs,
+                    &session,
+                    neighborhood_size_k,
+                    n_most_recent_sessions,
+                    qty_max_reco_results,
+                    enable_business_logic,
+                );
+                let recommended_items_vs = recommendations_vs
                     .into_sorted_vec()
                     .iter()
                     .map(|scored| scored.id)
@@ -63,16 +100,40 @@ fn main() {
 
                 let actual_next_items = Vec::from(&evolving_session_items[session_state..]);
                 // println!("recommended: {:?}\nactual: {:?}\n---------", &recommended_items, &actual_next_items);
-                mymetric.add(&recommended_items, &actual_next_items);
+                mymetric_modified.add(&recommended_items_modified, &actual_next_items);
+                mymetric_vmis.add(&recommended_items_vmis, &actual_next_items);
+                mymetric_vs.add(&recommended_items_vs, &actual_next_items);
             }
         });
 
     println!(
-        "{}",
-        mymetric
+        "modified: {}",
+        mymetric_modified
             .get_name()
             .split(",")
-            .zip(mymetric.result().split(","))
+            .zip(mymetric_modified.result().split(","))
+            .map(|(n, score)| format!("{}: {}", n, score))
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
+    println!("=================================");
+    println!(
+        "vmis: {}",
+        mymetric_vmis
+            .get_name()
+            .split(",")
+            .zip(mymetric_vmis.result().split(","))
+            .map(|(n, score)| format!("{}: {}", n, score))
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
+    println!("=================================");
+    println!(
+        "vs: {}",
+        mymetric_vs
+            .get_name()
+            .split(",")
+            .zip(mymetric_vs.result().split(","))
             .map(|(n, score)| format!("{}: {}", n, score))
             .collect::<Vec<_>>()
             .join("\n")
