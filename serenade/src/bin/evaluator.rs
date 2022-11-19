@@ -1,8 +1,8 @@
 use serenade_optimized::{io, vmisknn};
-
-use serenade_optimized::metrics::mrr::Mrr;
-use serenade_optimized::metrics::SessionMetric;
+// use serenade_optimized::metrics::mrr::Mrr;
+// use serenade_optimized::metrics::SessionMetric;
 use serenade_optimized::vmisknn::offline_index::OfflineIndex;
+use serenade_optimized::metrics::evaluation_reporter::EvaluationReporter;
 
 fn main() {
     // hyper-parameters
@@ -26,13 +26,13 @@ fn main() {
     let last_items_in_session = std::env::args().nth(5).expect("hyperparam: `last_items_in_session` not specified!").parse::<usize>().unwrap();
     let enable_business_logic = false;
 
-
+    let training_df = io::read_training_data(&*path_to_training);
     let offline_index = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
 
     let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
 
-    let qty_max_reco_results = 20;
-    let mut mymetric = Mrr::new(qty_max_reco_results);
+    let qty_max_reco_results = 24;
+    let mut mymetric = EvaluationReporter::new(&training_df, qty_max_reco_results);
 
     ordered_test_sessions
         .iter()
