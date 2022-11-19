@@ -1,0 +1,22 @@
+config_type = "toml"
+
+[server]
+host = "0.0.0.0"
+port = 8080
+num_workers = 4
+
+[log]
+level = "info" # not implemented
+
+[data]
+training_data_path=/Users/crescentonc/code/comp5331/archive/public_datasets_google_drive_serenade/retailrocket9_train.txt
+testing_data_path=/Users/crescentonc/code/comp5331/aechive/public_datasets_google_drive_serenade/retailrocket9_test.txt
+
+[model]
+m_most_recent_sessions = 1000
+neighborhood_size_k = 250
+max_items_in_session = 7 
+num_items_to_recommend = 20
+
+[logic]
+enable_business_logic = "false"

@@ -1,0 +1,34 @@
+training_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/nowplaying_train.0.txt
+test_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/nowplaying_test.0.txt
+Using hardcoded session duration percentiles.
+qty_events_p99_5: 50
+Using hardcoded session duration percentiles.
+modified: Mrr@20: 0.0352
+Ndcg@20: 0.0744
+HitRate@20: 0.1317
+Popularity@20: 0.0253
+Precision@20: 0.0111
+OPrecision@20: 0.0361
+Coverage@20: 0.9784
+Recall@20: 0.1052
+F1score@20: 0.0201
+=================================
+vmis: Mrr@20: 0.0487
+Ndcg@20: 0.1006
+HitRate@20: 0.1752
+Popularity@20: 0.0399
+Precision@20: 0.0167
+OPrecision@20: 0.0474
+Coverage@20: 0.9623
+Recall@20: 0.1373
+F1score@20: 0.0298
+=================================
+vs: Mrr@20: 0.0480
+Ndcg@20: 0.1001
+HitRate@20: 0.1744
+Popularity@20: 0.0394
+Precision@20: 0.0166
+OPrecision@20: 0.0478
+Coverage@20: 0.9504
+Recall@20: 0.1360
+F1score@20: 0.0296

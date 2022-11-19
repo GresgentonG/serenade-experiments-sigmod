@@ -1,0 +1,34 @@
+training_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/30music_train.0.txt
+test_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/30music_test.0.txt
+Using hardcoded session duration percentiles.
+qty_events_p99_5: 75
+Using hardcoded session duration percentiles.
+modified: Mrr@20: 0.0201
+Ndcg@20: 0.0487
+HitRate@20: 0.0960
+Popularity@20: 0.0417
+Precision@20: 0.0064
+OPrecision@20: 0.0283
+Coverage@20: 0.9481
+Recall@20: 0.0683
+F1score@20: 0.0118
+=================================
+vmis: Mrr@20: 0.1555
+Ndcg@20: 0.2277
+HitRate@20: 0.3778
+Popularity@20: 0.0454
+Precision@20: 0.0812
+OPrecision@20: 0.1082
+Coverage@20: 0.9447
+Recall@20: 0.2610
+F1score@20: 0.1239
+=================================
+vs: Mrr@20: 0.1340
+Ndcg@20: 0.2100
+HitRate@20: 0.3657
+Popularity@20: 0.0452
+Precision@20: 0.0615
+OPrecision@20: 0.1032
+Coverage@20: 0.9353
+Recall@20: 0.2500
+F1score@20: 0.0987

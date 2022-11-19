@@ -1,0 +1,34 @@
+training_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/rsc15-clicks_train.0.txt
+test_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/rsc15-clicks_test.0.txt
+Using hardcoded session duration percentiles.
+qty_events_p99_5: 18
+Using hardcoded session duration percentiles.
+modified: Mrr@20: 0.1242
+Ndcg@20: 0.1776
+HitRate@20: 0.3602
+Popularity@20: 0.0732
+Precision@20: 0.0575
+OPrecision@20: 0.0462
+Coverage@20: 0.9592
+Recall@20: 0.2756
+F1score@20: 0.0952
+=================================
+vmis: Mrr@20: 0.2117
+Ndcg@20: 0.2767
+HitRate@20: 0.5300
+Popularity@20: 0.0806
+Precision@20: 0.1123
+OPrecision@20: 0.0630
+Coverage@20: 0.9580
+Recall@20: 0.4068
+F1score@20: 0.1760
+=================================
+vs: Mrr@20: 0.1702
+Ndcg@20: 0.2152
+HitRate@20: 0.4159
+Popularity@20: 0.0705
+Precision@20: 0.0937
+OPrecision@20: 0.0464
+Coverage@20: 0.9518
+Recall@20: 0.3081
+F1score@20: 0.1436

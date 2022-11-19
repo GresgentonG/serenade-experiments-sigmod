@@ -1,0 +1,34 @@
+training_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/aotm_train.0.txt
+test_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/aotm_test.0.txt
+Using hardcoded session duration percentiles.
+qty_events_p99_5: 28
+Using hardcoded session duration percentiles.
+modified: Mrr@20: 0.0109
+Ndcg@20: 0.0294
+HitRate@20: 0.0478
+Popularity@20: 0.0812
+Precision@20: 0.0031
+OPrecision@20: 0.0147
+Coverage@20: 0.9972
+Recall@20: 0.0427
+F1score@20: 0.0058
+=================================
+vmis: Mrr@20: 0.0115
+Ndcg@20: 0.0320
+HitRate@20: 0.0544
+Popularity@20: 0.1115
+Precision@20: 0.0021
+OPrecision@20: 0.0170
+Coverage@20: 0.9980
+Recall@20: 0.0474
+F1score@20: 0.0041
+=================================
+vs: Mrr@20: 0.0131
+Ndcg@20: 0.0374
+HitRate@20: 0.0629
+Popularity@20: 0.0958
+Precision@20: 0.0019
+OPrecision@20: 0.0196
+Coverage@20: 0.9990
+Recall@20: 0.0554
+F1score@20: 0.0038

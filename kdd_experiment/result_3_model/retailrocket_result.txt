@@ -1,0 +1,34 @@
+training_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/retailrocket_train.0.txt
+test_data_file:/Users/crescentonc/code/comp5331/datasets_preprocessed/retailrocket_test.0.txt
+Using hardcoded session duration percentiles.
+qty_events_p99_5: 19
+Using hardcoded session duration percentiles.
+modified: Mrr@20: 0.1087
+Ndcg@20: 0.1341
+HitRate@20: 0.2476
+Popularity@20: 0.0506
+Precision@20: 0.0719
+OPrecision@20: 0.0246
+Coverage@20: 0.8548
+Recall@20: 0.1970
+F1score@20: 0.1054
+=================================
+vmis: Mrr@20: 0.1624
+Ndcg@20: 0.1986
+HitRate@20: 0.3457
+Popularity@20: 0.0567
+Precision@20: 0.1055
+OPrecision@20: 0.0342
+Coverage@20: 0.8471
+Recall@20: 0.2727
+F1score@20: 0.1521
+=================================
+vs: Mrr@20: 0.1335
+Ndcg@20: 0.1647
+HitRate@20: 0.2926
+Popularity@20: 0.0582
+Precision@20: 0.0863
+OPrecision@20: 0.0295
+Coverage@20: 0.8327
+Recall@20: 0.2295
+F1score@20: 0.1254
