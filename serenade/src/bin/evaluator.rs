@@ -6,10 +6,10 @@ use serenade_optimized::vmisknn::offline_index::OfflineIndex;
 
 fn main() {
     // hyper-parameters
-    let n_most_recent_sessions = 1500;
-    let neighborhood_size_k = 500;
-    let last_items_in_session = 3;
-    let enable_business_logic = false;
+    // let n_most_recent_sessions = 1500;
+    // let neighborhood_size_k = 500;
+    // let last_items_in_session = 3;
+    // let enable_business_logic = false;
 
     let path_to_training = std::env::args()
         .nth(1)
@@ -21,6 +21,11 @@ fn main() {
         .nth(2)
         .expect("Test data file not specified!");
     println!("test_data_file:{}", test_data_file);
+    let n_most_recent_sessions = std::env::args().nth(3).expect("hyperparam: `n_most_recent_sessions` not specified!").parse::<usize>().unwrap();
+    let neighborhood_size_k = std::env::args().nth(4).expect("hyperparam: `neighborhood_size_k` not specified!").parse::<usize>().unwrap();
+    let last_items_in_session = std::env::args().nth(5).expect("hyperparam: `last_items_in_session` not specified!").parse::<usize>().unwrap();
+    let enable_business_logic = false;
+
 
     let offline_index = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
 
