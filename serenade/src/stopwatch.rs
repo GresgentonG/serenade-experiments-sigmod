@@ -1,6 +1,6 @@
+use crate::stopwatch;
 use std::time::Instant;
 use tdigest::TDigest;
-use crate::stopwatch;
 
 #[derive(Clone)]
 #[cfg_attr(feature = "use_serde", derive(Serialize, Deserialize))]

@@ -29,7 +29,9 @@ impl SessionMetric for Mrr {
             .collect_vec();
         let next_item = next_items[0];
         let index = top_recos.iter().position(|&&item_id| item_id == next_item);
-        if let Some(rank) = index { self.sum_of_scores += 1_f64 / (rank as f64 + 1_f64) }
+        if let Some(rank) = index {
+            self.sum_of_scores += 1_f64 / (rank as f64 + 1_f64)
+        }
     }
 
     fn result(&self) -> f64 {

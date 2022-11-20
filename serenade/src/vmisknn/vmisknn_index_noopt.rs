@@ -4,10 +4,10 @@ use hashbrown::hash_map::DefaultHashBuilder;
 use hashbrown::HashMap;
 use hashbrown::HashSet;
 
-use crate::vmisknn::{SessionScore, SessionTime};
-use crate::vmisknn::vmisknn_index::prepare_hashmap;
 use crate::vmisknn::similarity_hashed::SimilarityComputationHash;
+use crate::vmisknn::vmisknn_index::prepare_hashmap;
 use crate::vmisknn::vmisknn_index::read_from_file;
+use crate::vmisknn::{SessionScore, SessionTime};
 
 pub struct VMISSkNNIndexNoOpt {
     sessions_for_item: HashMap<u64, Vec<u32>>,
@@ -102,7 +102,7 @@ impl SimilarityComputationHash for VMISSkNNIndexNoOpt {
                     *bottom = scored_session;
                 } else if (score - bottom.score).abs() < f64::EPSILON
                     && (self.historical_sessions_max_time_stamp[*session_id as usize]
-                    > self.historical_sessions_max_time_stamp[bottom.id as usize])
+                        > self.historical_sessions_max_time_stamp[bottom.id as usize])
                 {
                     let scored_session = SessionScore::new(*session_id, *score);
                     *bottom = scored_session;

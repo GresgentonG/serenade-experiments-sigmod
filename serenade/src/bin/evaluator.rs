@@ -1,9 +1,7 @@
 use serenade_optimized::{io, vmisknn};
-// use serenade_optimized::metrics::mrr::Mrr;
-// use serenade_optimized::metrics::SessionMetric;
 use serenade_optimized::vmisknn::offline_index::OfflineIndex;
-use serenade_optimized::vmisknn::vsknn_index::VSkNNIndex;
 use serenade_optimized::vmisknn::vmisknn_modified_index::VMISSkNNModifiedIndex;
+use serenade_optimized::vmisknn::vsknn_index::VSkNNIndex;
 
 use serenade_optimized::metrics::evaluation_reporter::EvaluationReporter;
 
@@ -24,14 +22,27 @@ fn main() {
         .nth(2)
         .expect("Test data file not specified!");
     println!("test_data_file:{}", test_data_file);
-    let n_most_recent_sessions = std::env::args().nth(3).expect("hyperparam: `m_most_recent_sessions` not specified!").parse::<usize>().unwrap();
-    let neighborhood_size_k = std::env::args().nth(4).expect("hyperparam: `neighborhood_size_k` not specified!").parse::<usize>().unwrap();
-    let last_items_in_session = std::env::args().nth(5).expect("hyperparam: `last_items_in_session` not specified!").parse::<usize>().unwrap();
+    let n_most_recent_sessions = std::env::args()
+        .nth(3)
+        .expect("hyperparam: `m_most_recent_sessions` not specified!")
+        .parse::<usize>()
+        .unwrap();
+    let neighborhood_size_k = std::env::args()
+        .nth(4)
+        .expect("hyperparam: `neighborhood_size_k` not specified!")
+        .parse::<usize>()
+        .unwrap();
+    let last_items_in_session = std::env::args()
+        .nth(5)
+        .expect("hyperparam: `last_items_in_session` not specified!")
+        .parse::<usize>()
+        .unwrap();
     let enable_business_logic = false;
 
     let training_df = io::read_training_data(&*path_to_training);
-    
-    let offline_index_modified = VMISSkNNModifiedIndex::new(&*path_to_training, n_most_recent_sessions);
+
+    let offline_index_modified =
+        VMISSkNNModifiedIndex::new(&*path_to_training, n_most_recent_sessions);
     let offline_index_vmis = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
     let offline_index_vs = VSkNNIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
 
@@ -53,7 +64,7 @@ fn main() {
                     0
                 };
                 let session: &[u64] = &evolving_session_items[start_index..session_state];
-                
+
                 let recommendations_modified = vmisknn::predict(
                     &offline_index_modified,
                     &session,
@@ -68,7 +79,6 @@ fn main() {
                     .map(|scored| scored.id)
                     .collect::<Vec<u64>>();
 
-                
                 let recommendations_vmis = vmisknn::predict(
                     &offline_index_vmis,
                     &session,
@@ -83,7 +93,6 @@ fn main() {
                     .map(|scored| scored.id)
                     .collect::<Vec<u64>>();
 
-                
                 let recommendations_vs = vmisknn::predict(
                     &offline_index_vs,
                     &session,

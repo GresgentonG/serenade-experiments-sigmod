@@ -15,7 +15,10 @@ fn main() {
         "neighborhood_size_k".to_string(),
         vec![50, 100, 500, 1000, 1500],
     );
-    param_grid.insert("max_items_in_session".to_string(), vec![1, 2, 3, 5, 7, 15, 100]);
+    param_grid.insert(
+        "max_items_in_session".to_string(),
+        vec![1, 2, 3, 5, 7, 15, 100],
+    );
 
     let qty_max_reco_results = 21;
 
@@ -42,7 +45,7 @@ fn main() {
         let neighborhood_size_k = *hyperparams.get("neighborhood_size_k").unwrap();
         let m_most_recent_sessions = *hyperparams.get("m_most_recent_sessions").unwrap();
         let enable_business_logic = false;
-        
+
         let vsknn_index = OfflineIndex::new_from_csv(&*path_to_training, m_most_recent_sessions);
         if neighborhood_size_k <= m_most_recent_sessions {
             let mut mymetric = Mrr::new(20);

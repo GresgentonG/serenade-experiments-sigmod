@@ -56,7 +56,10 @@ fn sanitize_training_data(
     let valid_session_ids: HashSet<u32> = filtered_training_data
         .iter()
         .map(|(session_id, item_id, time)| {
-            (item_id, SessionTime::new(session_id.clone(), time.clone()))
+            (
+                item_id,
+                SessionTime::new(session_id.clone(), time.clone()),
+            )
         })
         .into_group_map()
         .into_iter()

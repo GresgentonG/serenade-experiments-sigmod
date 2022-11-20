@@ -4,10 +4,10 @@ pub mod f1score;
 pub mod hitrate;
 pub mod mrr;
 pub mod ndcg;
+pub mod original_precision;
 pub mod popularity;
 pub mod precision;
 pub mod recall;
-pub mod original_precision;
 
 pub trait SessionMetric {
     fn add(&mut self, recommendations: &[u64], next_items: &[u64]);

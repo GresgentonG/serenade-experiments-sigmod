@@ -24,7 +24,6 @@ pub(crate) fn idf(num_sessions_total: usize, num_session_with_item: usize) -> f6
     (num_sessions_total as f64 / num_session_with_item as f64).ln()
 }
 
-
 #[cfg(test)]
 mod sessiontime_test {
     use crate::vmisknn::SessionTime;

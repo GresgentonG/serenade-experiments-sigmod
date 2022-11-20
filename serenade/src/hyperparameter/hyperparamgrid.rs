@@ -14,10 +14,7 @@ impl HyperParamGrid {
     /// # Arguments
     ///
     /// * `n` - the requested amount of random results returned.
-    pub fn get_n_random_combinations(
-        &self,
-        n: usize,
-    ) -> Vec<HashMap<String, usize, RandomState>> {
+    pub fn get_n_random_combinations(&self, n: usize) -> Vec<HashMap<String, usize, RandomState>> {
         let mut all_combinations = self.get_all_combinations();
         all_combinations.shuffle(&mut thread_rng());
         all_combinations.into_iter().take(n).collect()
