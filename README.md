@@ -4,7 +4,7 @@ The detailed description for the collaborative filtering code [is in the sub-fol
 # VMIS-kNN
 The repository contains implementation and experiment setup for the VMIS-kNN methods
 
-The original repository for the Serenade Recommender System can be found here [Serenade: Low-Latency Session-Based Recommendations](https://github.com/bolcom/serenade)
+The original repository for the Serenade Recommender System[^1] can be found here [Serenade: Low-Latency Session-Based Recommendations](https://github.com/bolcom/serenade)
 
 The original experiments repository can be found at [Serenad experiments](https://github.com/bolcom/serenade-experiments-sigmod)
 
@@ -78,3 +78,8 @@ cargo build --release
 
 ### Environment
 Tested on macOS Monterey 12.5.1
+
+
+[^1]: Barrie Kersbergen, Olivier Sprangers, and Sebastian Schelter. 2022. Serenade - Low-Latency Session-Based Recommendation in e-Commerce at Scale. In Proceedings of the 2022 International Conference on Management of Data (SIGMOD '22). Association for Computing Machinery, New York, NY, USA, 150–159. https://doi.org/10.1145/3514221.3517901
+
+<!-- [^2]: Malte Ludewig, Noemi Mauro, Sara Latifi, and Dietmar Jannach. 2019. Performance comparison of neural and non-neural approaches to session-based recommendation. In Proceedings of the 13th ACM Conference on Recommender Systems (RecSys '19). Association for Computing Machinery, New York, NY, USA, 462–466. https://doi.org/10.1145/3298689.3347041 -->
