@@ -8,12 +8,12 @@ use hashbrown::HashMap;
 use rayon::prelude::*;
 use serde::Deserialize;
 use std::collections::BinaryHeap;
+use std::error::Error;
 use std::fs;
 use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 use tdigest::TDigest;
-use std::error::Error;
 
 use avro_rs::from_value;
 use avro_rs::Reader;
@@ -36,7 +36,7 @@ pub struct OfflineIndex {
 
 impl OfflineIndex {
     pub fn new_from_csv(path_to_training: &str, m_most_recent_sessions: usize) -> Self {
-        let start_time = Instant::now();
+        let _start_time = Instant::now();
         // println!(
         //     "reading training data, determine items per training session {}",
         //     &path_to_training
@@ -53,7 +53,7 @@ impl OfflineIndex {
         //     start_time.elapsed().as_micros()
         // );
 
-        let start_time = Instant::now();
+        let _start_time = Instant::now();
         // println!("prepare indexes");
         let (
             item_to_top_sessions_ordered,
@@ -361,22 +361,17 @@ impl SimilarityComputationNew for OfflineIndex {
                                         heap_timestamps.push(SessionTime::new(
                                             *session_id,
                                             session_time_stamp,
-
                                         ));
                                     } else {
                                         let mut bottom = heap_timestamps.peek_mut().unwrap();
                                         if session_time_stamp > bottom.time {
                                             // println!("{:?} {:?}", session_time_stamp, bottom.time);
                                             // Remove the the existing minimum time stamp.
-                                            session_similarities
-                                                .remove_entry(&bottom.session_id);
+                                            session_similarities.remove_entry(&bottom.session_id);
                                             // Set new minimum timestamp
-                                            session_similarities
-                                                .insert(*session_id, decay_factor);
-                                            *bottom = SessionTime::new(
-                                                *session_id,
-                                                session_time_stamp,
-                                            );
+                                            session_similarities.insert(*session_id, decay_factor);
+                                            *bottom =
+                                                SessionTime::new(*session_id, session_time_stamp);
                                         } else {
                                             break 'session_loop;
                                         }
@@ -524,7 +519,6 @@ pub(crate) fn prepare_hashmap(
     )
 }
 
-
 // Custom binary search because this is stable unlike the rust default (i.e. this always returns right-most index in case of duplicate entries instead of a random match)
 fn binary_search_right(array: &[u64], key: u64) -> Result<usize, usize> {
     let mut top: usize = array.len();
@@ -584,7 +578,6 @@ fn binary_search_left(array: &[u64], key: u64) -> Result<usize, usize> {
     }
 }
 
-
 pub fn read_from_file(
     path: &str,
 ) -> Result<(Vec<Vec<u64>>, Vec<Vec<usize>>, Vec<u32>, TrainingDataStats), Box<dyn Error>> {
@@ -616,18 +609,9 @@ pub fn read_from_file(
     // Sort by session id - the data is unsorted
     let mut session_id_indices: Vec<usize> = (0..session_id.len()).into_iter().collect();
     session_id_indices.sort_by_key(|&i| &session_id[i]);
-    let session_id_sorted: Vec<usize> = session_id_indices
-        .iter()
-        .map(|&i| session_id[i])
-        .collect();
-    let item_id_sorted: Vec<usize> = session_id_indices
-        .iter()
-        .map(|&i| item_id[i])
-        .collect();
-    let time_sorted: Vec<usize> = session_id_indices
-        .iter()
-        .map(|&i| time[i])
-        .collect();
+    let session_id_sorted: Vec<usize> = session_id_indices.iter().map(|&i| session_id[i]).collect();
+    let item_id_sorted: Vec<usize> = session_id_indices.iter().map(|&i| item_id[i]).collect();
+    let time_sorted: Vec<usize> = session_id_indices.iter().map(|&i| time[i]).collect();
 
     // Get unique session ids
     session_id.sort_unstable();
@@ -651,8 +635,7 @@ pub fn read_from_file(
     //let mut i: usize = 0;
     let mut historical_sessions: Vec<Vec<u64>> = Vec::with_capacity(session_id.len());
     let mut historical_sessions_id: Vec<Vec<usize>> = Vec::with_capacity(session_id.len());
-    let mut historical_sessions_max_time_stamp: Vec<u32> =
-        Vec::with_capacity(session_id.len());
+    let mut historical_sessions_max_time_stamp: Vec<u32> = Vec::with_capacity(session_id.len());
     let mut history_session: Vec<u64> = Vec::with_capacity(1000);
     let mut history_session_id: Vec<usize> = Vec::with_capacity(1000);
     let mut max_time_stamp: usize = time_sorted[0];

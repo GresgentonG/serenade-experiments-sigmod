@@ -49,7 +49,9 @@ impl SessionMetric for Popularity {
         if !items.is_empty() {
             let mut sum = 0_f64;
             for item in items.iter() {
-                if let Some(item_freq) = self.popularity_scores.get(item) { sum += *item_freq as f64 / self.max_frequency as f64 }
+                if let Some(item_freq) = self.popularity_scores.get(item) {
+                    sum += *item_freq as f64 / self.max_frequency as f64
+                }
             }
             self.sum_of_scores += sum / items.len() as f64;
         }

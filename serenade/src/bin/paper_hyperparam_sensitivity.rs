@@ -44,7 +44,8 @@ fn main() {
         let n_most_recent_sessions = *hyperparams.get("sample_size").unwrap();
 
         if neighborhood_size_k <= n_most_recent_sessions {
-            let vsknn_index = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
+            let vsknn_index =
+                OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
             let ordered_test_sessions = io::read_test_data_evolving(&*test_data_file);
             let mut evaluation_reporter = EvaluationReporter::new(&training_df, 20);
 

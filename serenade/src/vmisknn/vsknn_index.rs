@@ -12,8 +12,8 @@ use tdigest::TDigest;
 
 use crate::dataframeutils::TrainingDataStats;
 use crate::io::{ItemId, Time, TrainingSessionId};
-use crate::vmisknn::{SessionScore, SessionTime};
 use crate::vmisknn::similarity_hashed::idf;
+use crate::vmisknn::{SessionScore, SessionTime};
 
 use super::similarity_indexed::SimilarityComputationNew;
 
@@ -59,32 +59,33 @@ pub fn read_from_file(
     let item_id_sorted: Vec<usize> = session_id_indices.iter().map(|&i| item_id[i]).collect();
     let time_sorted: Vec<usize> = session_id_indices.iter().map(|&i| time[i]).collect();
 
-    let res1 = (session_id_sorted.clone().into_iter().zip(item_id_sorted.clone().into_iter()).zip(time_sorted.clone().into_iter())).map(
-        |entry| {
-            (entry.0.0 as u32, entry.0.1 as u64, entry.1 as usize)
-        }
-    ).collect_vec();
-
+    let res1 = (session_id_sorted
+        .clone()
+        .into_iter()
+        .zip(item_id_sorted.clone().into_iter())
+        .zip(time_sorted.clone().into_iter()))
+    .map(|entry| (entry.0 .0 as u32, entry.0 .1 as u64, entry.1 as usize))
+    .collect_vec();
 
     let stats = {
-            // Get unique session ids
+        // Get unique session ids
         session_id.sort_unstable();
         session_id.dedup();
-        
+
         let qty_records = time_sorted.len();
         let qty_unique_session_ids = session_id.len();
-        
+
         // Get unique item ids
         // let mut unique_item_ids = item_id.clone();
         item_id.sort_unstable();
         item_id.dedup();
         let qty_unique_item_ids = item_id.len();
-        
+
         let min_time = time.iter().min().unwrap();
         let min_time_date_time = NaiveDateTime::from_timestamp(*min_time as i64, 0);
         let max_time = time.iter().max().unwrap();
         let max_time_date_time = NaiveDateTime::from_timestamp(*max_time as i64, 0);
-        
+
         // Create historical sessions array (deduplicated), historical sessions id array and array with max timestamps.
         //let mut i: usize = 0;
         let mut historical_sessions: Vec<Vec<u64>> = Vec::with_capacity(session_id.len());
@@ -119,14 +120,14 @@ pub fn read_from_file(
                 max_time_stamp = time_sorted[i];
             }
         }
-    
+
         let qty_events = historical_sessions
             .iter()
             .map(|items| items.len() as f64)
             .collect_vec();
         let qty_events_digest = TDigest::new_with_size(100);
         let qty_events_digest = qty_events_digest.merge_unsorted(qty_events);
-    
+
         println!("Using hardcoded session duration percentiles.");
         let session_duration_p05 = 14_u64;
         let session_duration_p25 = 77_u64;
@@ -137,7 +138,7 @@ pub fn read_from_file(
         let session_duration_p99 = 3359_u64;
         let session_duration_p99_5 = 4087_u64;
         let session_duration_p100 = 539931_u64;
-    
+
         // Session qty event percentiles:  p5=2 p25=2 p50=3 p75=6 p90=10 p95=14 p99=27 p99.5=34 p100=9408
         let qty_events_p05 = qty_events_digest.estimate_quantile(0.05).round() as u64;
         let qty_events_p25 = qty_events_digest.estimate_quantile(0.25).round() as u64;
@@ -148,7 +149,7 @@ pub fn read_from_file(
         let qty_events_p99 = qty_events_digest.estimate_quantile(0.99).round() as u64;
         let qty_events_p99_5 = qty_events_digest.estimate_quantile(0.995).round() as u64;
         let qty_events_p100 = qty_events_digest.estimate_quantile(1.0).round() as u64;
-    
+
         TrainingDataStats {
             descriptive_name: path.to_string(),
             qty_records,
@@ -177,10 +178,8 @@ pub fn read_from_file(
         }
     };
 
-
     Ok((res1, stats))
 }
-
 
 impl SimilarityComputationNew for VSkNNIndex {
     fn items_for_session(&self, session: &TrainingSessionId) -> &[u64] {
@@ -259,12 +258,10 @@ impl SimilarityComputationNew for VSkNNIndex {
         closest_neighbors
     }
 
-    fn find_attributes(&self, item_id: &u64) -> Option<&super::offline_index::ProductAttributes> {
+    fn find_attributes(&self, _item_id: &u64) -> Option<&super::offline_index::ProductAttributes> {
         todo!()
     }
 }
-
-
 
 impl VSkNNIndex {
     pub fn new(
@@ -304,8 +301,7 @@ impl VSkNNIndex {
             .collect();
         // end only need to retain sample_size_m sessions per item
 
-        let mut historical_session_index: HashMap<TrainingSessionId, Vec<ItemId>> =
-            HashMap::new();
+        let mut historical_session_index: HashMap<TrainingSessionId, Vec<ItemId>> = HashMap::new();
         let mut historical_session_max_order: HashMap<TrainingSessionId, Time> = HashMap::new();
         let mut historical_item_index: HashMap<ItemId, HashSet<TrainingSessionId>> = HashMap::new();
 
@@ -359,7 +355,11 @@ impl VSkNNIndex {
     pub fn new_from_csv(path_train: &str, n_most_recent_sessions: usize) -> Self {
         //println!("Reading inputs for tree index from {}...", path_train);
         let data_train = read_from_file(path_train).unwrap();
-        VSkNNIndex::new(data_train.0, n_most_recent_sessions, data_train.1.qty_events_p99_5 as usize)
+        VSkNNIndex::new(
+            data_train.0,
+            n_most_recent_sessions,
+            data_train.1.qty_events_p99_5 as usize,
+        )
     }
 
     fn sessions_for_item(&self, item: &u64) -> Option<&HashSet<u32, RandomState>> {

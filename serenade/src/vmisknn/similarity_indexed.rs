@@ -4,7 +4,6 @@ use crate::vmisknn::offline_index::ProductAttributes;
 use crate::vmisknn::SessionScore;
 use std::collections::BinaryHeap;
 
-
 pub trait SimilarityComputationNew {
     fn items_for_session(&self, session_idx: &u32) -> &[u64];
 

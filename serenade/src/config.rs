@@ -85,7 +85,7 @@ impl AppConfig {
             log: LogConfig::parse(&conf, ConfPath::from(&["log"])),
             data: DataConfig::parse(&conf, ConfPath::from(&["data"])),
             model: ModelConfig::parse(&conf, ConfPath::from(&["model"])),
-            logic: LogicConfig::parse(&conf, ConfPath::from(&["logic"]))
+            logic: LogicConfig::parse(&conf, ConfPath::from(&["logic"])),
         }
     }
 }

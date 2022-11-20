@@ -6,8 +6,8 @@ use hashbrown::hash_map::DefaultHashBuilder;
 use hashbrown::HashMap;
 use hashbrown::HashSet;
 
-use crate::vmisknn::{SessionScore, SessionTime};
 use crate::vmisknn::similarity_hashed::SimilarityComputationHash;
+use crate::vmisknn::{SessionScore, SessionTime};
 
 pub struct VMISSkNNIndex {
     sessions_for_item: HashMap<u64, Vec<u32>>,
@@ -69,18 +69,9 @@ pub fn read_from_file(
     // Sort by session id - the data is unsorted
     let mut session_id_indices: Vec<usize> = (0..session_id.len()).into_iter().collect();
     session_id_indices.sort_by_key(|&i| &session_id[i]);
-    let session_id_sorted: Vec<usize> = session_id_indices
-        .iter()
-        .map(|&i| session_id[i])
-        .collect();
-    let item_id_sorted: Vec<usize> = session_id_indices
-        .iter()
-        .map(|&i| item_id[i])
-        .collect();
-    let time_sorted: Vec<usize> = session_id_indices
-        .iter()
-        .map(|&i| time[i])
-        .collect();
+    let session_id_sorted: Vec<usize> = session_id_indices.iter().map(|&i| session_id[i]).collect();
+    let item_id_sorted: Vec<usize> = session_id_indices.iter().map(|&i| item_id[i]).collect();
+    let time_sorted: Vec<usize> = session_id_indices.iter().map(|&i| time[i]).collect();
 
     // Get unique session ids
     session_id.sort_unstable();
@@ -90,8 +81,7 @@ pub fn read_from_file(
     //let mut i: usize = 0;
     let mut historical_sessions: Vec<Vec<u64>> = Vec::with_capacity(session_id.len());
     let mut historical_sessions_id: Vec<Vec<usize>> = Vec::with_capacity(session_id.len());
-    let mut historical_sessions_max_time_stamp: Vec<u32> =
-        Vec::with_capacity(session_id.len());
+    let mut historical_sessions_max_time_stamp: Vec<u32> = Vec::with_capacity(session_id.len());
     let mut history_session: Vec<u64> = Vec::with_capacity(1000);
     let mut history_session_id: Vec<usize> = Vec::with_capacity(1000);
     let mut max_time_stamp: usize = time_sorted[0];
