@@ -19,14 +19,15 @@ use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng, SeedableRng};
 use rand_pcg::Pcg64;
 use rayon::prelude::*;
+use serenade_optimized::vmisknn::vmisknn_index::VMISSkNNIndex;
+use serenade_optimized::vmisknn::vmisknn_index_noopt::VMISSkNNIndexNoOpt;
+use serenade_optimized::vmisknn::vmisknn_modified_micro_index::VMISSkNNModifiedMicroIndex;
 use tdigest::TDigest;
 
 use serenade_optimized::io;
 use serenade_optimized::vmisknn::similarity_hashed::SimilarityComputationHash;
 use serenade_optimized::vmisknn::similarity_indexed::SimilarityComputationNew;
 use serenade_optimized::vmisknn::tree_index::TreeIndex;
-use serenade_optimized::vmisknn::vmisknn_index::VMISSkNNIndex;
-use serenade_optimized::vmisknn::vmisknn_index_noopt::VMISSkNNIndexNoOpt;
 use serenade_optimized::vmisknn::vsknn_index::VSkNNIndex;
 
 #[derive(Debug)]
@@ -50,18 +51,19 @@ fn main() {
         .build_global()
         .unwrap();
 
-    let algorithms = vec!["vmis_noopt", "vmis", "vsknn"];
+    let algorithms = vec!["vmis_noopt", "vmis", "vsknn", "vmis_simple_micro"];
 
-    for dataset in &["1m"] {
+    for dataset in &["aotm"] {
         for m in &[100, 250, 500, 1000] {
-            let path_train = format!("data/private-clicks-{}_train.txt", dataset);
-            let path_test = format!("data/private-clicks-{}_test.txt", dataset);
+            let path_train = format!("datasets/{}/{}_train_hyperparam.0.txt", dataset, dataset);
+            let path_test = format!("datasets/{}/{}_test_hyperparam.0.txt", dataset, dataset);
 
             let historical_sessions = io::read_training_data(&path_train);
 
             let vmis_noopt_index = VMISSkNNIndexNoOpt::new(&path_train, *m);
             let vmis_index = VMISSkNNIndex::new(&path_train, *m);
             let vsknn_index = VSkNNIndex::new(historical_sessions, *m, 1_000_000);
+            let vmis_simple_micro = VMISSkNNModifiedMicroIndex::new(&path_train, *m);
             // let tree_index = TreeIndex::new(&path_train, *m);
 
             let mut test_sessions: HashMap<u32, Vec<u64>> = HashMap::new();
@@ -127,6 +129,18 @@ fn main() {
                             let elapsed = start.elapsed();
                             let result = MicroBenchmarkLine {
                                 index: algorithms.get(2).unwrap().deref_copy(),
+                                dataset: dataset,
+                                m: *m,
+                                k: *k,
+                                duration_ns: elapsed.as_nanos() as f64,
+                            };
+                            duration_sample.push(result);
+
+                            let start = Instant::now();
+                            black_box(vmis_simple_micro.find_neighbors(&session, *k, *m));
+                            let elapsed = start.elapsed();
+                            let result = MicroBenchmarkLine {
+                                index: algorithms.get(3).unwrap().deref_copy(),
                                 dataset: dataset,
                                 m: *m,
                                 k: *k,

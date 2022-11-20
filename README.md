@@ -4,6 +4,10 @@ The detailed description for the collaborative filtering code [is in the sub-fol
 # VMIS-kNN
 The repository contains implementation and experiment setup for the VMIS-kNN methods
 
+The original repository for the Serenade Recommender System can be found here [Serenade: Low-Latency Session-Based Recommendations](https://github.com/bolcom/serenade)
+
+The original experiments repository can be found at [Serenad experiments](https://github.com/bolcom/serenade-experiments-sigmod)
+
 ## Structure
 ```
 ├── .gitignore
@@ -25,7 +29,9 @@ The repository contains implementation and experiment setup for the VMIS-kNN met
     ├── Cargo.toml               -- rust project file
     ├── ...                      -- some bash scripts and dockerfile from original repo
     ├── src
-    │   ├── bin                  -- source file to the executables 
+    |   ├── bin
+    |   |   ├── evaluator.rs  -- evaluate an indexing method with a training and test dataset and compute it's accuracy metrics
+    |   |   └── paper_micro_benchmark_runtimes.rs  -- benchmark latency performance for indexes
     │   ├── config.rs
     │   ├── config_processors.rs
     │   ├── dataframeutils.rs
@@ -38,14 +44,14 @@ The repository contains implementation and experiment setup for the VMIS-kNN met
     │   ├── stopwatch.rs
     │   └── vmisknn              -- implementation of the vs-knn, vmis-knn and our modified vmis-knn
     │       ├── mod.rs
-    │       ├── offline_index.rs
+    │       ├── offline_index.rs                -- vmis_knn index implementation for accuracy evaluation
     │       ├── similarity_hashed.rs
     │       ├── similarity_indexed.rs
-    │       ├── tree_index.rs
-    │       ├── vmisknn_index.rs
+    │       ├── vmisknn_index.rs                -- vmis_knn index implementation for performance benchmarks
     │       ├── vmisknn_index_noopt.rs
     │       ├── vmisknn_index_smallopt.rs
-    │       ├── vmisknn_simplified_index.rs   -- our modified vmis-knn
+    │       ├── vmisknn_modified_index.rs        -- our modified vmis_knn index implementation for accuracy evaluation
+    │       ├── vmisknn_modified_micro_index.rs  -- our modified vmis_knn index implementation for performance benchmarks
     │       └── vsknn_index.rs
     └── start_webservice.sh
 ```
