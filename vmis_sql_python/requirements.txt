@@ -1,8 +1,0 @@
-scikit-learn
-numpy
-pandas
-duckdb
-jupyterlab
-matplotlib
-
-

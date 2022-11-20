@@ -22,7 +22,7 @@ This is an implementation for collaborative filtering in session-based recommend
 - Spark(Optional)
 
 ### Preprocessing
-1. Run the Preprocessing python script in https://github.com/rn5l/session-rec/tree/master/preprocessing/session_based 
+1. modify the path and run the preprocessing [python script](./preprocessing/) modified from [session-rec](https://github.com/rn5l/session-rec/tree/master/preprocessing/session_based)
 2. Remove the header line at the head of the data file
 3. Set the correct `dst` path in `Preprocessing.scala`
 4. Run the Preprocessing by 
