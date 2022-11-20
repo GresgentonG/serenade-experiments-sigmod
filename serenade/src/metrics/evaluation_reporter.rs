@@ -4,9 +4,9 @@ use crate::metrics::f1score::F1score;
 use crate::metrics::hitrate::HitRate;
 use crate::metrics::mrr::Mrr;
 use crate::metrics::ndcg::Ndcg;
+use crate::metrics::original_precision::OPrecision;
 use crate::metrics::popularity::Popularity;
 use crate::metrics::precision::Precision;
-use crate::metrics::original_precision::OPrecision;
 use crate::metrics::recall::Recall;
 use crate::metrics::SessionMetric;
 

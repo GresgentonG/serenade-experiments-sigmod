@@ -2,7 +2,7 @@ use std::collections::BinaryHeap;
 use std::error::Error;
 
 use chrono::NaiveDateTime;
-use hashbrown::hash_map::DefaultHashBuilder;
+
 use hashbrown::HashMap;
 use hashbrown::HashSet;
 use itertools::Itertools;
@@ -11,7 +11,7 @@ use rayon::prelude::ParallelIterator;
 use tdigest::TDigest;
 
 use crate::dataframeutils::TrainingDataStats;
-use crate::vmisknn::similarity_hashed::SimilarityComputationHash;
+
 use crate::vmisknn::SessionScore;
 
 use super::similarity_indexed::SimilarityComputationNew;
@@ -426,7 +426,7 @@ impl SimilarityComputationNew for VMISSkNNModifiedIndex {
         closest_neighbors
     }
 
-    fn find_attributes(&self, item_id: &u64) -> Option<&super::offline_index::ProductAttributes> {
+    fn find_attributes(&self, _item_id: &u64) -> Option<&super::offline_index::ProductAttributes> {
         unimplemented!()
     }
 }

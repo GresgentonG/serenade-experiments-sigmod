@@ -53,7 +53,14 @@ pub async fn v1_recommend(
         vec![most_recent_item]
     };
 
-    let recommendations = vmisknn::predict(vsknn_index, &session_items, k, m, how_many, enable_business_logic);
+    let recommendations = vmisknn::predict(
+        vsknn_index,
+        &session_items,
+        k,
+        m,
+        how_many,
+        enable_business_logic,
+    );
 
     let recommended_items: Vec<u64> = recommendations
         .into_sorted_vec()
