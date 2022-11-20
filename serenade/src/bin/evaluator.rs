@@ -3,7 +3,7 @@ use serenade_optimized::{io, vmisknn};
 // use serenade_optimized::metrics::SessionMetric;
 use serenade_optimized::vmisknn::offline_index::OfflineIndex;
 use serenade_optimized::vmisknn::vsknn_index::VSkNNIndex;
-use serenade_optimized::vmisknn::vmisknn_simplified_index::VMISSkNNSimpleIndex;
+use serenade_optimized::vmisknn::vmisknn_modified_index::VMISSkNNModifiedIndex;
 
 use serenade_optimized::metrics::evaluation_reporter::EvaluationReporter;
 
@@ -31,7 +31,7 @@ fn main() {
 
     let training_df = io::read_training_data(&*path_to_training);
     
-    let offline_index_modified = VMISSkNNSimpleIndex::new(&*path_to_training, n_most_recent_sessions);
+    let offline_index_modified = VMISSkNNModifiedIndex::new(&*path_to_training, n_most_recent_sessions);
     let offline_index_vmis = OfflineIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
     let offline_index_vs = VSkNNIndex::new_from_csv(&*path_to_training, n_most_recent_sessions);
 

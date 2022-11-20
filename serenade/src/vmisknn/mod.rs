@@ -4,17 +4,18 @@ use std::collections::BinaryHeap;
 use hashbrown::hash_map::Entry;
 use hashbrown::HashMap;
 
-use crate::vmisknn::similarity_indexed::SimilarityComputationNew;
 use crate::vmisknn::offline_index::ProductAttributes;
+use crate::vmisknn::similarity_indexed::SimilarityComputationNew;
 
-pub mod vsknn_index;
-pub mod vmisknn_index_noopt;
-pub mod vmisknn_index;
+pub mod offline_index;
 pub mod similarity_hashed;
 pub mod similarity_indexed;
-pub mod offline_index;
 pub mod tree_index;
-pub mod vmisknn_simplified_index;
+pub mod vmisknn_modified_index;
+pub mod vmisknn_modified_micro_index;
+pub mod vmisknn_index_noopt;
+pub mod vmisknn_index;
+pub mod vsknn_index;
 
 #[derive(PartialEq, Debug)]
 pub struct SessionScore {
@@ -77,7 +78,6 @@ impl PartialOrd for ItemScore {
     }
 }
 
-
 #[derive(Eq, Debug)]
 pub struct SessionTime {
     pub session_id: u32,
@@ -109,7 +109,6 @@ impl PartialEq for SessionTime {
         self.session_id == other.session_id
     }
 }
-
 
 fn linear_score(pos: usize) -> f64 {
     if pos < 100 {
@@ -188,7 +187,8 @@ pub fn predict<I: SimilarityComputationNew + Send + Sync>(
 
         if top_items.len() < how_many {
             if enable_business_logic {
-                let reco_item_attribs:Option<&ProductAttributes> = index.find_attributes(&reco_item_id);
+                let reco_item_attribs: Option<&ProductAttributes> =
+                    index.find_attributes(&reco_item_id);
                 if passes_business_rules(current_item_attribs, reco_item_attribs) {
                     top_items.push(scored_item);
                 }
@@ -291,7 +291,14 @@ mod offline_index_test {
 
         let session_items = vec![920005];
 
-        let recommendations = predict(&vsknn_index, &session_items, k, m, how_many, enable_business_logic);
+        let recommendations = predict(
+            &vsknn_index,
+            &session_items,
+            k,
+            m,
+            how_many,
+            enable_business_logic,
+        );
 
         // we expect the four other item_ids to be recommended
         assert_eq!(4, recommendations.len());
@@ -352,7 +359,6 @@ mod offline_index_test {
         assert_eq!(expected_items, recommended_items);
     }
 
-
     #[test]
     fn handle_reverse_ordering_sessionscore() {
         let largest = SessionScore::new(123, 5000 as f64);
@@ -406,7 +412,4 @@ mod offline_index_test {
         assert_eq!(234, heap_timestamps.pop().unwrap().session_id);
         assert_eq!(123, heap_timestamps.pop().unwrap().session_id);
     }
-
-
-
 }
