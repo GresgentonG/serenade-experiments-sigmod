@@ -30,7 +30,7 @@ The original experiments repository can be found at [Serenad experiments](https:
     ├── ...                      -- some bash scripts and dockerfile from original repo
     ├── src
     |   ├── bin
-    |   |   ├── evaluator.rs  -- evaluate an indexing method with a training and test dataset and compute it's accuracy metrics
+    |   |   ├── evaluator.rs     -- evaluate an indexing method with a training and test dataset and compute it's accuracy metrics
     |   |   └── paper_micro_benchmark_runtimes.rs  -- benchmark latency performance for indexes
     │   ├── config.rs
     │   ├── config_processors.rs
